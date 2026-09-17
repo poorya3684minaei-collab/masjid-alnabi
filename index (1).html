@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>سامانه نمرات – مسجد النبی سنندج</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700&display=swap');
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --green-dark: #1a5c3a;
+    --green:      #2e8b57;
+    --green-mid:  #3aa06a;
+    --green-light:#e8f5ee;
+    --gold:       #c9a84c;
+    --gold-light: #f5eed8;
+    --red:        #c0392b;
+    --red-light:  #fdecea;
+    --gray-100:   #f7f9f8;
+    --gray-200:   #eef1ef;
+    --gray-600:   #6b7a70;
+    --gray-900:   #1a2420;
+    --shadow-sm:  0 1px 3px rgba(0,0,0,.08);
+    --shadow-md:  0 4px 16px rgba(0,0,0,.12);
+    --shadow-lg:  0 8px 32px rgba(0,0,0,.16);
+    --radius:     14px;
+    --radius-sm:  8px;
+  }
+
+  body {
+    font-family: 'Vazirmatn', system-ui, sans-serif;
+    background: var(--gray-100);
+    color: var(--gray-900);
+    min-height: 100vh;
+    direction: rtl;
+  }
+
+  /* ── Login ─────────────────────────────────────────────── */
+  #login-screen {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    background: linear-gradient(145deg, #1a5c3a 0%, #2e8b57 50%, #1a4a2e 100%);
+  }
+
+  .login-card {
+    background: #fff;
+    border-radius: 20px;
+    padding: 48px 40px;
+    width: 100%;
+    max-width: 420px;
+    box-shadow: var(--shadow-lg);
+    text-align: center;
+  }
+
+  .login-logo {
+    width: 80px; height: 80px;
+    background: var(--green-light);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    margin: 0 auto 24px;
+    font-size: 36px;
+  }
+
+  .login-title {
+    font-size: 1.5rem; font-weight: 700;
+    color: var(--green-dark); margin-bottom: 6px;
+  }
+  .login-subtitle {
+    font-size: .9rem; color: var(--gray-600); margin-bottom: 36px;
+  }
+
+  .field { margin-bottom: 18px; text-align: right; }
+  .field label {
+    display: block; font-size: .85rem; font-weight: 600;
+    color: var(--gray-600); margin-bottom: 7px;
+  }
+  .field input {
+    width: 100%; padding: 13px 16px;
+    border: 2px solid var(--gray-200);
+    border-radius: var(--radius-sm);
+    font-family: inherit; font-size: 1rem;
+    direction: ltr; text-align: center;
+    transition: border-color .2s;
+    outline: none;
+    letter-spacing: 2px;
+  }
+  .field input:focus { border-color: var(--green); }
+  .field input::placeholder { letter-spacing: 0; color: #bbb; }
+
+  .btn-login {
+    width: 100%; padding: 14px;
+    background: var(--green);
+    color: #fff; border: none; border-radius: var(--radius-sm);
+    font-family: inherit; font-size: 1rem; font-weight: 700;
+    cursor: pointer; margin-top: 8px;
+    transition: background .2s, transform .1s;
+  }
+  .btn-login:hover { background: var(--green-dark); }
+  .btn-login:active { transform: scale(.98); }
+
+  .login-error {
+    margin-top: 14px; padding: 10px 14px;
+    background: var(--red-light); color: var(--red);
+    border-radius: var(--radius-sm); font-size: .88rem;
+    display: none;
+  }
+  .login-note {
+    margin-top: 20px; font-size: .8rem; color: var(--gray-600);
+    line-height: 1.6;
+  }
+
+  /* ── Dashboard ─────────────────────────────────────────── */
+  #dashboard { display: none; }
+
+  .topbar {
+    background: var(--green-dark);
+    color: #fff;
+    padding: 0 24px;
+    height: 64px;
+    display: flex; align-items: center; justify-content: space-between;
+    box-shadow: 0 2px 8px rgba(0,0,0,.2);
+    position: sticky; top: 0; z-index: 100;
+  }
+  .topbar-title { font-weight: 700; font-size: 1rem; }
+  .topbar-sub   { font-size: .78rem; opacity: .75; margin-top: 2px; }
+  .btn-logout {
+    padding: 7px 18px;
+    background: rgba(255,255,255,.15);
+    border: 1px solid rgba(255,255,255,.3);
+    border-radius: 20px; color: #fff;
+    font-family: inherit; font-size: .85rem; cursor: pointer;
+    transition: background .2s;
+  }
+  .btn-logout:hover { background: rgba(255,255,255,.25); }
+
+  .main { max-width: 900px; margin: 0 auto; padding: 32px 20px 60px; }
+
+  .welcome-card {
+    background: linear-gradient(135deg, var(--green) 0%, var(--green-dark) 100%);
+    color: #fff; border-radius: var(--radius);
+    padding: 28px 32px; margin-bottom: 28px;
+    display: flex; align-items: center; gap: 20px;
+    box-shadow: var(--shadow-md);
+  }
+  .welcome-avatar {
+    width: 60px; height: 60px; border-radius: 50%;
+    background: rgba(255,255,255,.2);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 26px; flex-shrink: 0;
+  }
+  .welcome-name { font-size: 1.3rem; font-weight: 700; margin-bottom: 4px; }
+  .welcome-meta { font-size: .85rem; opacity: .8; }
+
+  .stats-row {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px;
+    margin-bottom: 28px;
+  }
+  .stat-card {
+    background: #fff; border-radius: var(--radius); padding: 18px 20px;
+    box-shadow: var(--shadow-sm); text-align: center;
+  }
+  .stat-num { font-size: 1.8rem; font-weight: 700; color: var(--green); }
+  .stat-lbl { font-size: .8rem; color: var(--gray-600); margin-top: 3px; }
+
+  .section-title {
+    font-size: 1rem; font-weight: 700; color: var(--green-dark);
+    margin-bottom: 14px; padding-right: 12px;
+    border-right: 4px solid var(--green);
+  }
+
+  .level-block { margin-bottom: 24px; }
+  .level-header {
+    background: var(--green-light);
+    border-radius: var(--radius-sm) var(--radius-sm) 0 0;
+    padding: 10px 18px;
+    font-weight: 600; font-size: .9rem; color: var(--green-dark);
+    border-right: 4px solid var(--green);
+  }
+  .grades-table {
+    width: 100%; border-collapse: collapse;
+    background: #fff;
+    border-radius: 0 0 var(--radius-sm) var(--radius-sm);
+    overflow: hidden;
+    box-shadow: var(--shadow-sm);
+  }
+  .grades-table th {
+    background: #fff; padding: 11px 18px;
+    font-size: .8rem; font-weight: 600; color: var(--gray-600);
+    border-bottom: 2px solid var(--gray-200);
+  }
+  .grades-table td {
+    padding: 11px 18px; font-size: .9rem;
+    border-bottom: 1px solid var(--gray-200);
+  }
+  .grades-table tr:last-child td { border-bottom: none; }
+  .grades-table tr:hover td { background: var(--gray-100); }
+
+  .grade-val {
+    font-weight: 700; font-size: 1rem;
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 48px; height: 32px; border-radius: 6px;
+  }
+  .grade-pass { background: var(--green-light); color: var(--green-dark); }
+  .grade-fail { background: var(--red-light);   color: var(--red); }
+
+  .badge-pass, .badge-fail {
+    font-size: .72rem; padding: 2px 8px; border-radius: 10px; font-weight: 600;
+  }
+  .badge-pass { background: var(--green-light); color: var(--green-dark); }
+  .badge-fail { background: var(--red-light);   color: var(--red); }
+
+  .footer {
+    text-align: center; font-size: .78rem; color: var(--gray-600);
+    margin-top: 40px;
+  }
+
+  @media(max-width:520px) {
+    .login-card { padding: 36px 24px; }
+    .stats-row  { grid-template-columns: repeat(3,1fr); gap: 10px; }
+    .stat-num   { font-size: 1.4rem; }
+    .welcome-card { padding: 20px; }
+    .grades-table th, .grades-table td { padding: 10px 12px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ══ LOGIN ══════════════════════════════════════════════════════════════════ -->
+<div id="login-screen">
+  <div class="login-card">
+    <div class="login-logo">🕌</div>
+    <div class="login-title">سامانه نمرات</div>
+    <div class="login-subtitle">مسجد النبی – سنندج ۴۴۲</div>
+
+    <div class="field">
+      <label>کد ملی</label>
+      <input type="text" id="inp-id" placeholder="کد ملی خود را وارد کنید"
+             maxlength="12" inputmode="numeric" autocomplete="off">
+    </div>
+    <button class="btn-login" onclick="doLogin()">مشاهده نمرات</button>
+    <div class="login-error" id="login-err">کد ملی اشتباه است یا در سیستم ثبت نشده.</div>
+    <div class="login-note">
+      نام کاربری و رمز ورود هر دو کد ملی شماست.<br>
+      برای دیدن نمرات فقط کد ملی خود را وارد کنید.
+    </div>
+  </div>
+</div>
+
+<!-- ══ DASHBOARD ══════════════════════════════════════════════════════════════ -->
+<div id="dashboard">
+  <div class="topbar">
+    <div>
+      <div class="topbar-title">🕌 سامانه نمرات مسجد النبی</div>
+      <div class="topbar-sub">سنندج – نیمسال اول ۴۴۲</div>
+    </div>
+    <button class="btn-logout" onclick="doLogout()">خروج</button>
+  </div>
+
+  <div class="main">
+    <div class="welcome-card">
+      <div class="welcome-avatar">👤</div>
+      <div>
+        <div class="welcome-name" id="dash-name"></div>
+        <div class="welcome-meta">نیمسال اول – سال ۱۴۰۴</div>
+      </div>
+    </div>
+
+    <div class="stats-row">
+      <div class="stat-card">
+        <div class="stat-num" id="stat-total">–</div>
+        <div class="stat-lbl">تعداد دروس</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num" id="stat-avg">–</div>
+        <div class="stat-lbl">میانگین نمرات</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num" id="stat-pass">–</div>
+        <div class="stat-lbl">دروس قبول</div>
+      </div>
+    </div>
+
+    <div class="section-title">نمرات به تفکیک پایه</div>
+    <div id="grades-container"></div>
+
+    <div class="footer">
+      سامانه نمرات مسجد النبی سنندج &nbsp;|&nbsp; نیمسال اول ۱۴۰۴
+    </div>
+  </div>
+</div>
+
+<script>
+
+const DB = {
+  "b7d19591a554a2c09de45ef4a9bba272a0d97a5a485d432d22f3b327358175be": {"name": "میلاد", "family": "سلامتی", "grades": [{"course": "تجوید", "level": "پایه اول", "grade": 20.0}, {"course": "لغت احمدی", "level": "پایه اول", "grade": 12.0}, {"course": "عوامل جرجانی", "level": "پایه اول", "grade": 20.0}, {"course": "روخوانی قرآن", "level": "پایه اول", "grade": 20.0}, {"course": "حدیث  اخلاق", "level": "پایه اول", "grade": 17.0}, {"course": "آداب المتعلمین", "level": "پایه دوم", "grade": 15.5}, {"course": "فقه المنهجی", "level": "پایه دوم", "grade": 18.5}, {"course": "سیره وتاریخ", "level": "پایه دوم", "grade": 12.0}, {"course": "تفسیرصفوه", "level": "پایه سوم", "grade": 16.0}, {"course": "اصول و مبانی فقه 2", "level": "پایه سوم", "grade": 10.0}, {"course": "صدری الحیوه", "level": "پایه سوم", "grade": 14.5}, {"course": "قطر الندی", "level": "پایه سوم", "grade": 14.0}, {"course": "صرف 6", "level": "پایه سوم", "grade": 17.5}]},
+  "c65610471719c3c6e7d5b28503cf6b6c53881f6b936c32b7fae77c06afc44fbf": {"name": "محمد", "family": "عظیمی", "grades": [{"course": "فتح القریب", "level": "پایه اول", "grade": 5.0}, {"course": "تجوید", "level": "پایه اول", "grade": 5.0}, {"course": "لغت احمدی", "level": "پایه اول", "grade": 8.0}, {"course": "عوامل جرجانی", "level": "پایه اول", "grade": 4.0}, {"course": "روخوانی قرآن", "level": "پایه اول", "grade": 5.0}, {"course": "حدیث  اخلاق", "level": "پایه اول", "grade": 7.0}]},
+  "0fab8db816a2e6921e5a30a37329781f370b136f4bfcd93e5ca4883327e8dbdf": {"name": "وحید", "family": "احمدی", "grades": [{"course": "فتح القریب", "level": "پایه اول", "grade": 12.0}, {"course": "تجوید", "level": "پایه اول", "grade": 4.25}, {"course": "لغت احمدی", "level": "پایه اول", "grade": 12.0}, {"course": "روخوانی قرآن", "level": "پایه اول", "grade": 14.0}, {"course": "حدیث  اخلاق", "level": "پایه اول", "grade": 15.5}]},
+  "6bdd538780b7c7be5fc3ea56f97529373deb181e4169c5118a4f9a3cbf38e8ab": {"name": "محمدمعین", "family": "احمدی", "grades": [{"course": "فتح القریب", "level": "پایه اول", "grade": 13.0}, {"course": "تجوید", "level": "پایه اول", "grade": 7.0}, {"course": "عوامل برکوی(نحو)", "level": "پایه اول", "grade": 17.5}, {"course": "لغت احمدی", "level": "پایه اول", "grade": 12.0}, {"course": "عوامل جرجانی", "level": "پایه اول", "grade": 18.0}, {"course": "روخوانی قرآن", "level": "پایه اول", "grade": 18.0}, {"course": "حدیث  اخلاق", "level": "پایه اول", "grade": 18.5}, {"course": "تصریف زنجانی", "level": "پایه دوم", "grade": 13.0}, {"course": "حلیه القرآن سطح 3", "level": "پایه دوم", "grade": 14.5}, {"course": "انقلاب اسلامی", "level": "پایه دوم", "grade": 12.0}, {"course": "قصص النبین", "level": "پایه دوم", "grade": 16.5}, {"course": "آداب المتعلمین", "level": "پایه دوم", "grade": 14.0}, {"course": "فقه المنهجی", "level": "پایه دوم", "grade": 17.5}, {"course": "سیره وتاریخ", "level": "پایه دوم", "grade": 12.0}]},
+  "3679d31d950c8b108739ee1980db48b67bd6caa2e4fcd9451c43566fd4939f23": {"name": "نیما", "family": "مرادیانی", "grades": [{"course": "فتح القریب", "level": "پایه اول", "grade": 13.5}, {"course": "تجوید", "level": "پایه اول", "grade": 10.0}, {"course": "عوامل جرجانی", "level": "پایه اول", "grade": 13.0}, {"course": "روخوانی قرآن", "level": "پایه اول", "grade": 20.0}, {"course": "حدیث  اخلاق", "level": "پایه اول", "grade": 12.5}, {"course": "تصریف زنجانی", "level": "پایه دوم", "grade": 14.0}, {"course": "حلیه القرآن سطح 3", "level": "پایه دوم", "grade": 4.0}, {"course": "قصص النبین", "level": "پایه دوم", "grade": 14.0}, {"course": "آداب المتعلمین", "level": "پایه دوم", "grade": 13.0}, {"course": "فقه المنهجی", "level": "پایه دوم", "grade": 17.5}, {"course": "سیره وتاریخ", "level": "پایه دوم", "grade": 11.0}, {"course": "تفسیرصفوه", "level": "پایه سوم", "grade": 16.0}, {"course": "فقه - فرایض", "level": "پایه سوم", "grade": 13.5}, {"course": "اصول و مبانی فقه 2", "level": "پایه سوم", "grade": 5.5}, {"course": "صرف 6", "level": "پایه سوم", "grade": 17.0}]},
+  "d6e18fa31ff27ee2cd5bd59912613d5de7422140c05f30ddc3c1d61ada2acfe7": {"name": "سیدمحسن", "family": "حسینی", "grades": [{"course": "فتح القریب", "level": "پایه اول", "grade": 13.0}, {"course": "تجوید", "level": "پایه اول", "grade": 9.0}, {"course": "عوامل برکوی(نحو)", "level": "پایه اول", "grade": 10.5}, {"course": "عوامل جرجانی", "level": "پایه اول", "grade": 13.0}, {"course": "روخوانی قرآن", "level": "پایه اول", "grade": 15.0}, {"course": "فقه المنهجی", "level": "پایه دوم", "grade": 18.0}]},
+  "118efba9abb1c343886fb9f0bfb936fcb9d58d2a04c87f6b608102d6638c4da1": {"name": "آرمین", "family": "شاکری", "grades": [{"course": "فتح القریب", "level": "پایه اول", "grade": 4.0}, {"course": "تجوید", "level": "پایه اول", "grade": 7.0}, {"course": "عوامل برکوی(نحو)", "level": "پایه اول", "grade": 4.5}, {"course": "لغت احمدی", "level": "پایه اول", "grade": 9.0}, {"course": "عوامل جرجانی", "level": "پایه اول", "grade": 7.0}, {"course": "روخوانی قرآن", "level": "پایه اول", "grade": 15.0}, {"course": "حدیث  اخلاق", "level": "پایه اول", "grade": 6.0}]},
+  "5c5e21177380f31b386147323beced35322c67d2d490fba548af499feac4da83": {"name": "منیب", "family": "شیری", "grades": [{"course": "فتح القریب", "level": "پایه اول", "grade": 8.0}, {"course": "عوامل جرجانی", "level": "پایه اول", "grade": 12.0}, {"course": "روخوانی قرآن", "level": "پایه اول", "grade": 18.0}, {"course": "حدیث  اخلاق", "level": "پایه اول", "grade": 11.0}, {"course": "تصریف زنجانی", "level": "پایه دوم", "grade": 16.5}, {"course": "قصص النبین", "level": "پایه دوم", "grade": 12.0}, {"course": "فقه المنهجی", "level": "پایه دوم", "grade": 16.5}, {"course": "سیره وتاریخ", "level": "پایه دوم", "grade": 11.0}]},
+  "12b098d0453d52bbd05adb5af4732801807d854cf91e7d7a63e1e64607ed48e0": {"name": "سلام", "family": "نوری", "grades": [{"course": "نگارش کردی", "level": "پایه اول", "grade": 15.0}, {"course": "نحو", "level": "پایه اول", "grade": 8.0}, {"course": "صرف میر", "level": "پایه اول", "grade": 1.0}, {"course": "حلیه سطح یک", "level": "پایه اول", "grade": 13.0}, {"course": "هدایه", "level": "پایه دوم", "grade": 10.0}, {"course": "حلیه سطح 2", "level": "پایه دوم", "grade": 12.0}, {"course": "التقریب 2", "level": "پایه دوم", "grade": 11.0}, {"course": "صمدیه", "level": "پایه سوم", "grade": 15.0}, {"course": "فتح القریب", "level": "پایه سوم", "grade": 11.0}, {"course": "تصریف ملاعلی", "level": "پایه سوم", "grade": 10.0}, {"course": "قطرالندی", "level": "پایه چهارم", "grade": 12.0}, {"course": "مبادی العربیه جلد4", "level": "پایه چهارم", "grade": 5.0}, {"course": "فتح القریب", "level": "پایه چهارم", "grade": 12.5}, {"course": "آیین نگارش بر بال قلم از اول  تا درسی بیست", "level": "پایه چهارم", "grade": 12.0}, {"course": "الوجیزوهبه الزحیلی", "level": "پایه پنجم", "grade": 5.0}, {"course": "تحقیق در مسائل کلامی", "level": "پایه پنجم", "grade": 13.0}, {"course": "منطق صوری", "level": "پایه پنجم", "grade": 15.5}, {"course": "تفسیر جلالین", "level": "پایه پنجم", "grade": 12.5}, {"course": "حدیث", "level": "پایه پنجم", "grade": 13.0}, {"course": "فقه المنهجی", "level": "پایه ششم", "grade": 13.0}, {"course": "تفسیر جلالین", "level": "پایه ششم", "grade": 12.0}, {"course": "بلاغه الواضحه", "level": "پایه ششم", "grade": 2.5}, {"course": "اتقان سیوطی", "level": "پایه ششم", "grade": 15.0}, {"course": "سیوطی", "level": "پایه هفتم", "grade": 14.0}, {"course": "فقه المنهجی", "level": "پایه هفتم", "grade": 4.0}, {"course": "تاریخ رحیق المختوم", "level": "پایه هفتم", "grade": 20.0}, {"course": "اتقان سیوطی جلد دوم", "level": "پایه هفتم", "grade": 10.0}, {"course": "اصول الفقه", "level": "پایه هفتم", "grade": 15.0}, {"course": "سیوطی", "level": "پایه هشتم", "grade": 14.0}, {"course": "فقه المنهجی", "level": "پایه هشتم", "grade": 14.0}, {"course": "منطق حاشیه", "level": "پایه هشتم", "grade": 19.0}, {"course": "تفسیرجلالین جز با حاشیه صاوی جرء پانزدهم", "level": "پایه هشتم", "grade": 7.0}, {"course": "بلوغ المرام", "level": "پایه هشتم", "grade": 7.0}]},
+  "19a157c694246271b88c799b4249881c4f52c1fded89d7af0c9af40f416e8847": {"name": "سالار", "family": "ساعدی", "grades": [{"course": "حلیه سطح یک", "level": "پایه اول", "grade": 12.5}, {"course": "تفسیر جلالین", "level": "پایه سوم", "grade": 14.0}, {"course": "آیین نگارش بر بال قلم از اول  تا درسی بیست", "level": "پایه چهارم", "grade": 15.0}]},
+  "35a9b9390d2f7d18bd92e301ebf9b574f353e8d199316ebbbc10d928e884ad05": {"name": "عرفان", "family": "محمدی", "grades": [{"course": "نگارش کردی", "level": "پایه اول", "grade": 17.0}, {"course": "التقریب 2", "level": "پایه دوم", "grade": 16.0}, {"course": "صمدیه", "level": "پایه سوم", "grade": 12.0}, {"course": "تصریف ملاعلی", "level": "پایه سوم", "grade": 13.0}, {"course": "تفسیر جلالین", "level": "پایه سوم", "grade": 17.0}, {"course": "قطرالندی", "level": "پایه چهارم", "grade": 16.0}, {"course": "فتح القریب", "level": "پایه چهارم", "grade": 17.5}, {"course": "آیین نگارش بر بال قلم از اول  تا درسی بیست", "level": "پایه چهارم", "grade": 16.0}]},
+  "df7ccae0dff1c7d869ee1ad4e404bd92aaa1c4b04fc6509cb6f224f6951f6fd9": {"name": "پیام", "family": "قاسمی", "grades": [{"course": "تصریف زنجانی", "level": "پایه دوم", "grade": 17.0}, {"course": "حلیه القرآن سطح 3", "level": "پایه دوم", "grade": 17.0}, {"course": "انقلاب اسلامی", "level": "پایه دوم", "grade": 4.0}, {"course": "قصص النبین", "level": "پایه دوم", "grade": 17.5}, {"course": "آداب المتعلمین", "level": "پایه دوم", "grade": 17.0}, {"course": "فقه المنهجی", "level": "پایه دوم", "grade": 17.5}, {"course": "سیره وتاریخ", "level": "پایه دوم", "grade": 16.5}]},
+  "67590dc3dd28a4fdf0138f73b656b1ac98cacb447f6309abff6a8dafbf5f2329": {"name": "فرشید", "family": "ابراهیمی", "grades": [{"course": "هدایه", "level": "پایه دوم", "grade": 16.5}, {"course": "التقریب 2", "level": "پایه دوم", "grade": 12.0}, {"course": "صمدیه", "level": "پایه سوم", "grade": 11.0}, {"course": "تصریف ملاعلی", "level": "پایه سوم", "grade": 7.0}, {"course": "مبادی العربیه جلد4", "level": "پایه چهارم", "grade": 10.0}, {"course": "فتح القریب", "level": "پایه چهارم", "grade": 16.0}, {"course": "الوجیزوهبه الزحیلی", "level": "پایه پنجم", "grade": 4.0}, {"course": "فقه المنهجی", "level": "پایه ششم", "grade": 12.5}, {"course": "تفسیر جلالین", "level": "پایه ششم", "grade": 15.0}, {"course": "بلاغه الواضحه", "level": "پایه ششم", "grade": 10.0}, {"course": "سیوطی", "level": "پایه هفتم", "grade": 14.5}, {"course": "اتقان سیوطی جلد دوم", "level": "پایه هفتم", "grade": 12.5}, {"course": "اصول الفقه", "level": "پایه هفتم", "grade": 19.0}, {"course": "سیوطی", "level": "پایه هشتم", "grade": 18.0}, {"course": "فقه المنهجی", "level": "پایه هشتم", "grade": 10.0}, {"course": "تفسیرجلالین جز با حاشیه صاوی جرء پانزدهم", "level": "پایه هشتم", "grade": 12.0}, {"course": "بلوغ المرام", "level": "پایه هشتم", "grade": 14.0}]},
+  "6f7aaef35a692c65edafbb4d53eefc60b408371480def6cc3ead5b153bad85e9": {"name": "قانع", "family": "زندی", "grades": [{"course": "حلیه سطح 2", "level": "پایه دوم", "grade": 15.0}, {"course": "فتح القریب", "level": "پایه سوم", "grade": 15.5}, {"course": "فقه المنهجی", "level": "پایه ششم", "grade": 17.0}, {"course": "بلاغه الواضحه", "level": "پایه ششم", "grade": 12.0}, {"course": "اتقان سیوطی", "level": "پایه ششم", "grade": 16.0}, {"course": "سیوطی", "level": "پایه هفتم", "grade": 17.0}, {"course": "فقه المنهجی", "level": "پایه هفتم", "grade": 4.0}, {"course": "مقدمه ابن صلاح فی علم حدیث", "level": "پایه هفتم", "grade": 14.0}, {"course": "اصول الفقه", "level": "پایه هفتم", "grade": 17.0}]},
+  "77e11c2380607f66dff243fa41ac26af5bdeff61dc2ca25a452c583b752c973f": {"name": "امجد", "family": "محمودی", "grades": [{"course": "هدایه", "level": "پایه دوم", "grade": 7.0}, {"course": "حلیه سطح 2", "level": "پایه دوم", "grade": 14.0}, {"course": "فتح القریب", "level": "پایه چهارم", "grade": 11.0}, {"course": "اتقان سیوطی", "level": "پایه ششم", "grade": 7.0}, {"course": "مقدمه ابن صلاح فی علم حدیث", "level": "پایه هفتم", "grade": 7.0}, {"course": "اتقان سیوطی جلد دوم", "level": "پایه هفتم", "grade": 15.0}, {"course": "اصول الفقه", "level": "پایه هفتم", "grade": 16.0}, {"course": "فقه المنهجی", "level": "پایه هشتم", "grade": 10.0}, {"course": "منطق حاشیه", "level": "پایه هشتم", "grade": 17.5}, {"course": "تفسیرجلالین جز با حاشیه صاوی جرء پانزدهم", "level": "پایه هشتم", "grade": 5.0}, {"course": "جواهرالبلاغه", "level": "پایه هشتم", "grade": 20.0}, {"course": "بلوغ المرام", "level": "پایه هشتم", "grade": 20.0}]},
+  "dd708c1d26d285394dbf9f99eaa9a12344cea77ce697bbc24e4de8537baa73a1": {"name": "مبین", "family": "پابرجا", "grades": [{"course": "تفسیرصفوه", "level": "پایه سوم", "grade": 13.5}]},
+  "efddbbc154ae0c4a2bed7104232a60f8a1bc3da0ec42fcacb778bfb9d216d0e1": {"name": "آرمان", "family": "رحیمی", "grades": [{"course": "صمدیه", "level": "پایه سوم", "grade": 16.0}, {"course": "فتح القریب", "level": "پایه چهارم", "grade": 13.0}, {"course": "الوجیزوهبه الزحیلی", "level": "پایه پنجم", "grade": 5.0}, {"course": "تحقیق در مسائل کلامی", "level": "پایه پنجم", "grade": 14.5}, {"course": "منطق صوری", "level": "پایه پنجم", "grade": 15.0}, {"course": "تفسیر جلالین", "level": "پایه پنجم", "grade": 19.0}, {"course": "فقه المنهجی", "level": "پایه ششم", "grade": 12.0}, {"course": "تفسیر جلالین", "level": "پایه ششم", "grade": 15.0}, {"course": "بلاغه الواضحه", "level": "پایه ششم", "grade": 12.0}, {"course": "اتقان سیوطی", "level": "پایه ششم", "grade": 17.0}, {"course": "سیوطی", "level": "پایه هفتم", "grade": 14.0}, {"course": "فقه المنهجی", "level": "پایه هفتم", "grade": 1.0}, {"course": "مقدمه ابن صلاح فی علم حدیث", "level": "پایه هفتم", "grade": 16.0}, {"course": "تاریخ رحیق المختوم", "level": "پایه هفتم", "grade": 20.0}, {"course": "اتقان سیوطی جلد دوم", "level": "پایه هفتم", "grade": 12.0}, {"course": "اصول الفقه", "level": "پایه هفتم", "grade": 17.0}, {"course": "سیوطی", "level": "پایه هشتم", "grade": 15.5}, {"course": "فقه المنهجی", "level": "پایه هشتم", "grade": 12.0}, {"course": "منطق حاشیه", "level": "پایه هشتم", "grade": 19.0}, {"course": "جواهرالبلاغه", "level": "پایه هشتم", "grade": 12.0}, {"course": "بلوغ المرام", "level": "پایه هشتم", "grade": 13.0}]},
+  "3d16bc37902cec0cab029a226f15aa420ddd8c886a2c16817bb2540afa040bca": {"name": "امیر", "family": "مردوخی", "grades": [{"course": "رایانه کار درجه 1و2", "level": "پایه سوم", "grade": 13.0}, {"course": "بلاغت و معانی", "level": "پایه چهارم", "grade": 12.0}, {"course": "تاریخ تحولات", "level": "پایه چهارم", "grade": 12.0}, {"course": "رحیق المختوم", "level": "پایه چهارم", "grade": 10.5}, {"course": "سیوطی- نحو8", "level": "پایه چهارم", "grade": 12.0}, {"course": "فقه المنهجی-فقه8", "level": "پایه چهارم", "grade": 12.0}, {"course": "تبیان-علوم قرآن", "level": "پایه چهارم", "grade": 18.5}, {"course": "وجیز زیدان", "level": "پایه چهارم", "grade": 19.0}, {"course": "حدیث", "level": "پایه چهارم", "grade": 13.5}]},
+  "e609e600d748eeb05f023e4584151b8118a2c42a5770f9a15c0390a8c4642469": {"name": "چیاکو", "family": "کرمی", "grades": [{"course": "رایانه کار درجه 1و2", "level": "پایه سوم", "grade": 16.0}, {"course": "بلاغت و معانی", "level": "پایه چهارم", "grade": 12.0}, {"course": "تاریخ تحولات", "level": "پایه چهارم", "grade": 9.0}, {"course": "رحیق المختوم", "level": "پایه چهارم", "grade": 7.5}, {"course": "سیوطی- نحو8", "level": "پایه چهارم", "grade": 10.0}, {"course": "فقه المنهجی-فقه8", "level": "پایه چهارم", "grade": 13.0}, {"course": "تبیان-علوم قرآن", "level": "پایه چهارم", "grade": 11.0}, {"course": "وجیز زیدان", "level": "پایه چهارم", "grade": 8.0}, {"course": "حدیث", "level": "پایه چهارم", "grade": 14.5}]},
+  "bafda614fcd03549d15dc1cecc0e8b8abbbbb02870332c326c0d90f551ce4964": {"name": "آرش", "family": "برنامه", "grades": [{"course": "فتح القریب", "level": "پایه چهارم", "grade": 7.0}, {"course": "آیین نگارش بر بال قلم از اول  تا درسی بیست", "level": "پایه چهارم", "grade": 12.0}, {"course": "تفسیر جلالین", "level": "پایه ششم", "grade": 16.0}, {"course": "بلاغه الواضحه", "level": "پایه ششم", "grade": 3.5}, {"course": "اتقان سیوطی", "level": "پایه ششم", "grade": 15.0}, {"course": "فقه المنهجی", "level": "پایه هفتم", "grade": 7.0}, {"course": "مقدمه ابن صلاح فی علم حدیث", "level": "پایه هفتم", "grade": 16.0}, {"course": "تاریخ رحیق المختوم", "level": "پایه هفتم", "grade": 15.0}, {"course": "اتقان سیوطی جلد دوم", "level": "پایه هفتم", "grade": 8.0}, {"course": "اصول الفقه", "level": "پایه هفتم", "grade": 15.0}, {"course": "فقه المنهجی", "level": "پایه هشتم", "grade": 13.0}, {"course": "منطق حاشیه", "level": "پایه هشتم", "grade": 19.5}, {"course": "تفسیرجلالین جز با حاشیه صاوی جرء پانزدهم", "level": "پایه هشتم", "grade": 12.0}, {"course": "جواهرالبلاغه", "level": "پایه هشتم", "grade": 16.0}, {"course": "بلوغ المرام", "level": "پایه هشتم", "grade": 14.0}]},
+  "0e837ba94eedbcbe400804fa507095bcb1c6bf55c4cd2a6273eda5782e2bf80b": {"name": "حامد", "family": "خسروی", "grades": [{"course": "فقه المنهجی", "level": "پایه ششم", "grade": 16.0}]},
+  "694c773d795a344b2f8df0b6a7f4ca8032d01d8ad1473180da6ac5ae68eb6647": {"name": "سیروان", "family": "حیدریان", "grades": [{"course": "فقه المنهجی", "level": "پایه ششم", "grade": 16.0}, {"course": "فقه المنهجی", "level": "پایه هفتم", "grade": 8.0}, {"course": "اصول الفقه", "level": "پایه هفتم", "grade": 14.0}]},
+  "2a6b556e9d969fd8dcc221cc3ba2ecf1065db2377d872dc2fa425c478d147d1e": {"name": "اسعد", "family": "اشرفی اقبال", "grades": [{"course": "تفسیر جلالین", "level": "پایه ششم", "grade": 20.0}, {"course": "بلاغه الواضحه", "level": "پایه ششم", "grade": 15.0}]},
+  "384caaa2852a9e752dfc0e400e6e1813e467864442b6ff77b43d235c2a845794": {"name": "شورش", "family": "مقصودی", "grades": [{"course": "اتقان سیوطی", "level": "پایه ششم", "grade": 13.0}, {"course": "اتقان سیوطی جلد دوم", "level": "پایه هفتم", "grade": 10.0}]},
+  "4ac29654d37a5d932d8026dce8334b7776f00d63787655b22627676f7af6d3a3": {"name": "فریاد", "family": "وکیلی امین", "grades": [{"course": "تفسیر جلالین", "level": "پایه ششم", "grade": 13.0}]},
+  "76c20963f5f06499dbc6c1c2bd26f73e424bba586d13ac3ff9a7b02ce5ae3d52": {"name": "سیدمحمد", "family": "حسینی", "grades": [{"course": "سیوطی", "level": "پایه هفتم", "grade": 17.0}, {"course": "فقه المنهجی", "level": "پایه هفتم", "grade": 16.5}, {"course": "مقدمه ابن صلاح فی علم حدیث", "level": "پایه هفتم", "grade": 17.0}, {"course": "تاریخ رحیق المختوم", "level": "پایه هفتم", "grade": 20.0}, {"course": "اتقان سیوطی جلد دوم", "level": "پایه هفتم", "grade": 15.5}]},
+  "049d2cb717dc62fe72350a6c54eef110769ed2c3bed356a6cca2cb6312f6e14b": {"name": "دیاکو", "family": "خضری", "grades": [{"course": "سیوطی", "level": "پایه هفتم", "grade": 10.5}, {"course": "فقه المنهجی", "level": "پایه هفتم", "grade": 14.0}, {"course": "مقدمه ابن صلاح فی علم حدیث", "level": "پایه هفتم", "grade": 6.0}, {"course": "اصول الفقه", "level": "پایه هفتم", "grade": 12.0}, {"course": "فقه المنهجی", "level": "پایه هشتم", "grade": 7.0}, {"course": "منطق حاشیه", "level": "پایه هشتم", "grade": 18.5}, {"course": "جواهرالبلاغه", "level": "پایه هشتم", "grade": 20.0}]},
+  "0cb3c0de88eb619973dda49f30b3f99459fac2e6585a300661d6ced499e965f5": {"name": "پوریا", "family": "مینایی", "grades": [{"course": "مقدمه ابن صلاح فی علم حدیث", "level": "پایه هفتم", "grade": 18.0}, {"course": "تاریخ رحیق المختوم", "level": "پایه هفتم", "grade": 20.0}, {"course": "اتقان سیوطی جلد دوم", "level": "پایه هفتم", "grade": 14.0}, {"course": "اصول الفقه", "level": "پایه هفتم", "grade": 15.0}]},
+  "f8073215e258bc17bcb8f5a0815ca924caa1a79c84298281edb75e46887e7f6e": {"name": "رسول", "family": "فتحی", "grades": [{"course": "تاریخ رحیق المختوم", "level": "پایه هفتم", "grade": 5.0}]},
+  "4442374d6eed87d756d7d89e42ea9cced7c74e59d3fa93f9dc53615baa41ddb6": {"name": "مهدی", "family": "رضائی", "grades": [{"course": "فقه المنهجی", "level": "پایه هشتم", "grade": 7.0}, {"course": "تفسیرجلالین جز با حاشیه صاوی جرء پانزدهم", "level": "پایه هشتم", "grade": 4.0}, {"course": "جواهرالبلاغه", "level": "پایه هشتم", "grade": 16.0}, {"course": "بلوغ المرام", "level": "پایه هشتم", "grade": 12.0}]}
+};
+async function sha256(str) {
+  const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str));
+  return Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,'0')).join('');
+}
+
+async function doLogin() {
+  const raw = document.getElementById('inp-id').value.trim().replace(/\D/g,'');
+  if (!raw) return;
+  const h = await sha256(raw);
+  if (DB[h]) {
+    showDashboard(DB[h]);
+  } else {
+    const err = document.getElementById('login-err');
+    err.style.display = 'block';
+    setTimeout(() => err.style.display = 'none', 3000);
+  }
+}
+
+document.getElementById('inp-id').addEventListener('keydown', e => {
+  if (e.key === 'Enter') doLogin();
+});
+
+function showDashboard(student) {
+  document.getElementById('login-screen').style.display = 'none';
+  document.getElementById('dashboard').style.display = 'block';
+
+  document.getElementById('dash-name').textContent = student.name + ' ' + student.family;
+
+  const grades = student.grades;
+  const total  = grades.length;
+  const avg    = total ? (grades.reduce((s,g) => s+g.grade, 0) / total).toFixed(1) : '–';
+  const pass   = grades.filter(g => g.grade >= 10).length;
+
+  document.getElementById('stat-total').textContent = total;
+  document.getElementById('stat-avg').textContent   = avg;
+  document.getElementById('stat-pass').textContent  = pass;
+
+  // group by level
+  const byLevel = {};
+  for (const g of grades) {
+    if (!byLevel[g.level]) byLevel[g.level] = [];
+    byLevel[g.level].push(g);
+  }
+
+  const levelOrder = [
+    'پایه اول','پایه دوم','پایه سوم','پایه چهارم',
+    'پایه پنجم','پایه ششم','پایه هفتم','پایه هشتم'
+  ];
+
+  const container = document.getElementById('grades-container');
+  container.innerHTML = '';
+
+  for (const lvl of levelOrder) {
+    if (!byLevel[lvl]) continue;
+    const rows = byLevel[lvl].map(g => {
+      const cls  = g.grade >= 10 ? 'pass' : 'fail';
+      const badge= g.grade >= 10 ? '<span class="badge-pass">قبول</span>' : '<span class="badge-fail">مردود</span>';
+      return `<tr>
+        <td>${g.course}</td>
+        <td style="text-align:center">
+          <span class="grade-val grade-${cls}">${g.grade % 1 === 0 ? g.grade.toFixed(0) : g.grade}</span>
+        </td>
+        <td style="text-align:center">${badge}</td>
+      </tr>`;
+    }).join('');
+
+    container.innerHTML += `
+      <div class="level-block">
+        <div class="level-header">📚 ${lvl}</div>
+        <table class="grades-table">
+          <thead><tr>
+            <th style="text-align:right">نام درس</th>
+            <th style="text-align:center">نمره</th>
+            <th style="text-align:center">وضعیت</th>
+          </tr></thead>
+          <tbody>${rows}</tbody>
+        </table>
+      </div>`;
+  }
+}
+
+function doLogout() {
+  document.getElementById('login-screen').style.display = 'flex';
+  document.getElementById('dashboard').style.display = 'none';
+  document.getElementById('inp-id').value = '';
+  document.getElementById('grades-container').innerHTML = '';
+}
+</script>
+</body>
+</html>
