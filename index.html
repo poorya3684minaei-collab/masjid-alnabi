@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>سامانه نمرات – مسجد النبی سنندج</title>
+<title>سامانه نمرات – مدرسه مسجد النبی سنندج</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700&display=swap');
 
@@ -214,6 +214,17 @@
   .badge-pass { background: var(--green-light); color: var(--green-dark); }
   .badge-fail { background: var(--red-light);   color: var(--red); }
 
+  .appeal-box {
+    background: #fff8e6;
+    border: 1px solid #f0d78c;
+    border-radius: 10px;
+    padding: 16px 20px;
+    margin-top: 28px;
+    font-size: 0.92rem;
+    line-height: 1.8;
+    color: #5c4a1a;
+  }
+
   .footer {
     text-align: center; font-size: .78rem; color: var(--gray-600);
     margin-top: 40px;
@@ -235,7 +246,7 @@
   <div class="login-card">
     <div class="login-logo">🕌</div>
     <div class="login-title">سامانه نمرات</div>
-    <div class="login-subtitle">مسجد النبی – سنندج ۴۴۲</div>
+    <div class="login-subtitle">مسجد النبی سنندج<br>نیم‌سال دوم سال تحصیلی ۱۴۰۴-۱۴۰۵</div>
 
     <div class="field">
       <label>کد ملی</label>
@@ -245,8 +256,7 @@
     <button class="btn-login" onclick="doLogin()">مشاهده نمرات</button>
     <div class="login-error" id="login-err">کد ملی اشتباه است یا در سیستم ثبت نشده.</div>
     <div class="login-note">
-      نام کاربری و رمز ورود هر دو کد ملی شماست.<br>
-      برای دیدن نمرات فقط کد ملی خود را وارد کنید.
+      فقط کد ملی خود را وارد کنید.
     </div>
   </div>
 </div>
@@ -256,7 +266,7 @@
   <div class="topbar">
     <div>
       <div class="topbar-title">🕌 سامانه نمرات مسجد النبی</div>
-      <div class="topbar-sub">سنندج – نیمسال اول ۴۴۲</div>
+      <div class="topbar-sub">نیم‌سال دوم سال تحصیلی ۱۴۰۴-۱۴۰۵</div>
     </div>
     <button class="btn-logout" onclick="doLogout()">خروج</button>
   </div>
@@ -266,7 +276,7 @@
       <div class="welcome-avatar">👤</div>
       <div>
         <div class="welcome-name" id="dash-name"></div>
-        <div class="welcome-meta">نیمسال اول – سال ۱۴۰۴</div>
+        <div class="welcome-meta">نیم‌سال دوم – سال تحصیلی ۱۴۰۴-۱۴۰۵</div>
       </div>
     </div>
 
@@ -288,8 +298,12 @@
     <div class="section-title">نمرات به تفکیک پایه</div>
     <div id="grades-container"></div>
 
+    <div class="appeal-box">
+      فاضل ارجمند، در صورت داشتن اعتراض به هر یک از نمرات اعلام‌شده، لطفاً به آقای <strong>مجید عینی</strong>، کارشناس آموزش مرکز بزرگ اسلامی غرب کشور مراجعه فرمایید.
+    </div>
+
     <div class="footer">
-      سامانه نمرات مسجد النبی سنندج &nbsp;|&nbsp; نیمسال اول ۱۴۰۴
+      سامانه نمرات مسجد النبی سنندج &nbsp;|&nbsp; نیم‌سال دوم سال تحصیلی ۱۴۰۴-۱۴۰۵
     </div>
   </div>
 </div>
@@ -328,6 +342,7 @@ const DB = {
   "f8073215e258bc17bcb8f5a0815ca924caa1a79c84298281edb75e46887e7f6e": {"name": "رسول", "family": "فتحی", "grades": [{"course": "تاریخ رحیق المختوم", "level": "پایه هفتم", "grade": 5.0}]},
   "4442374d6eed87d756d7d89e42ea9cced7c74e59d3fa93f9dc53615baa41ddb6": {"name": "مهدی", "family": "رضائی", "grades": [{"course": "فقه المنهجی", "level": "پایه هشتم", "grade": 7.0}, {"course": "تفسیرجلالین جز با حاشیه صاوی جرء پانزدهم", "level": "پایه هشتم", "grade": 4.0}, {"course": "جواهرالبلاغه", "level": "پایه هشتم", "grade": 16.0}, {"course": "بلوغ المرام", "level": "پایه هشتم", "grade": 12.0}]}
 };
+
 async function sha256(str) {
   const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str));
   return Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,'0')).join('');
@@ -359,7 +374,7 @@ function showDashboard(student) {
   const grades = student.grades;
   const total  = grades.length;
   const avg    = total ? (grades.reduce((s,g) => s+g.grade, 0) / total).toFixed(1) : '–';
-  const pass   = grades.filter(g => g.grade >= 10).length;
+  const pass   = grades.filter(g => g.grade >= 12).length;
 
   document.getElementById('stat-total').textContent = total;
   document.getElementById('stat-avg').textContent   = avg;
@@ -383,8 +398,8 @@ function showDashboard(student) {
   for (const lvl of levelOrder) {
     if (!byLevel[lvl]) continue;
     const rows = byLevel[lvl].map(g => {
-      const cls  = g.grade >= 10 ? 'pass' : 'fail';
-      const badge= g.grade >= 10 ? '<span class="badge-pass">قبول</span>' : '<span class="badge-fail">مردود</span>';
+      const cls  = g.grade >= 12 ? 'pass' : 'fail';
+      const badge= g.grade >= 12 ? '<span class="badge-pass">قبول</span>' : '<span class="badge-fail">مردود</span>';
       return `<tr>
         <td>${g.course}</td>
         <td style="text-align:center">
